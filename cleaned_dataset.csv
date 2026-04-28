@@ -1,0 +1,11 @@
+date,departure_station,arrival_station,scheduled_time,actual_time,delay_minutes,day_of_week,month,scheduled_hour,is_peak_hour,delay_category
+2024-02-01,Paris,Marseille,08:00:00,08:10:00,10.0,Thursday,2,8,1,Short delay
+2024-02-01,Bordeaux,Lyon,09:15:00,09:20:00,5.0,Thursday,2,9,1,On time / slight
+2024-02-02,Lyon,Paris,07:30:00,07:40:00,10.0,Friday,2,7,1,Short delay
+2024-02-02,Marseille,Bordeaux,10:00:00,10:30:00,30.0,Friday,2,10,0,Medium delay
+2024-02-03,Nice,Lille,12:45:00,12:50:00,5.0,Saturday,2,12,0,On time / slight
+2024-02-03,Lille,Nice,14:00:00,14:05:00,5.0,Saturday,2,14,0,On time / slight
+2024-02-04,Paris,Bordeaux,08:15:00,08:50:00,35.0,Sunday,2,8,1,Long delay
+2024-02-05,Marseille,Lyon,09:45:00,10:15:00,30.0,Monday,2,9,1,Medium delay
+2024-02-27,Strasbourg,Strasbourg,12:30:00,18:31:00,20.0,Tuesday,2,12,0,Medium delay
+2024-02-16,Bordeaux,Paris,16:01:00,12:30:00,30.0,Friday,2,16,0,Medium delay
