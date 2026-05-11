@@ -31,3 +31,13 @@ Models:
     R2 score: 0.041
     The Random Forest achieved our best error rate, reducing the MAE to 2.28 minutes. This means that for the vast majority of train journeys, this model is the most accurate at predicting the arrival time.
     However, while the MAE improved, the R2 score dropped to 0.041. This highlights a characteristic of the Random Forest Regressor: it is great at identifying non-linear patterns, but is sensitive to outliers. Because the dataset contains big delays, as shown by the high baseline RMSE, the R2 score is lower.
+
+Model selection:
+    After identifying the Random Forest Regressor as the most accurate model based on the initial MAE, we perform hyperparameter tuning to optimize it.
+    Key hyperparameters:
+    - n_estimators = the number of trees (we chose 3 values);
+    - max_depth = limits how deep each tree can grow (3 values);
+    - min_samples_split = minimum number of samples required to split an internal node (3 values).
+    GridSearchCV will create a grid of 3 x 3 x 3 = 27 possible combinations.
+    We then use Cross-Validation on each combination. The training dataset is divided into 5 subsets and the model is trained 5 separate times. Each time, we will use 4 subsets for training and the remaining one for validation (different subset every time, until we go through all of them). We calculate the average MAE across all 5 iterations to determine the effectiveness of a specific parameter combination.
+    The algorithm identifies the best parameters, which provided the lowest error, and outputs the best estimator (the model trained with these settings).
