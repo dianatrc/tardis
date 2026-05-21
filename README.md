@@ -41,3 +41,11 @@ Model selection:
     GridSearchCV will create a grid of 3 x 3 x 3 = 27 possible combinations.
     We then use Cross-Validation on each combination. The training dataset is divided into 5 subsets and the model is trained 5 separate times. Each time, we will use 4 subsets for training and the remaining one for validation (different subset every time, until we go through all of them). We calculate the average MAE across all 5 iterations to determine the effectiveness of a specific parameter combination.
     The algorithm identifies the best parameters, which provided the lowest error, and outputs the best estimator (the model trained with these settings).
+    
+Setup：
+
+Install the required dependencies with: python3 -m pip install -r requirements.txt
+
+Run the Streamlit dashboard:
+
+To start the dashboard, run: python3 -m streamlit run tardis_dashboard.py
