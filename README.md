@@ -1,51 +1,64 @@
 EPITECH PROJECT, 2026 - TARDIS
+Train Delay Analysis and Prediction
 
-tardis_model.ipynb
-This notebook focuses on building and evaluating regression models in order to predict the "Average delay of all trains at arrival".
+The goal of this project is to analyze train delay data, build a regression model to predict delays, and display everything through an interactive dashboard.
 
-Data Loading:
-    The notebook starts by importing the necessary libraries (pandas, numpy, scikit-learn) and loading the cleaned dataset.
+Project Structure:
+- dataset.csv: initial dataset
+- cleaned_dataset.csv: output from the tardis_eda notebook
+- model.pkl: trained Random Forest model
+- tardis_eda.ipynb: data exploration, cleaning and feature engineering
+- tardis_model.ipynb: model training, evaluation and selection
+- tardis_dashboard.py: Streamlit dashboard
+- requirements.txt: project dependencies
+- model_report.md: detailed model results
+- README.md
 
-Feature selection:
-    We selected variables known before the journey starts, such as the Service type, Departure/Arrival stations, Month, Year and the Number of scheduled trains. For a predictive model to be useful in the real world, it must only use information that is available at the moment the prediction is requested. If we included columns like "Number of cancelled trains", we would be using data that is only known during or after the journey. Moreover, each feature represents a logical factor in potential delays (e.g. "Departure/Arrival stations" -> certain stations are more congested than others, the route represents a major factor in delay probability; "Month" -> weather condition and holiday travel periods significantly impact train's performance).
-
-Data preprocessing:
-    We used One-Hot Encoding (created columns with numerical values of 0/1) to transform text data into a numerical format that the models can understand. Afterwards, we split the dataset: 80% into a Training Set and the remaining 20% into a Test Set to ensure we can evaluate the model on unseen data.
-
-Models:
-    1) Baseline Model: A simple strategy that uses the average delay of the training set as a constant prediction for all cases. This provides a minimum performance.
-    Baseline Mean Prediction: 5.98 minutes.
-    Baseline MAE: 3.19 minutes
-    Baseline RMSE: 5.75 minutes.
-    MAE (Mean Absolute Error) -> the average of all absolute errors. It shows how many minutes, on average, the model was off by.
-    RMSE (Root Mean Squared Error) -> Because of the fact that the errors are squared before being averaged, RMSE gives much more weight to large errors (outliers). If the RMSE value is much higher than the MAE value, it means that the model is making some very large mistakes on certain cases, even if it's generally accurate on most.
-    In our example, the RMSE value is nearly double the MAE value. This gives us the information that the dataset contains some trains that have very big delays.
-    2) Linear Regression: This model serves as a first step beyond the simple average. It finds a mathematical, linear equation that takes into account all the features in order to predict the final delay.
-    Linear Regression MAE: 2.57 minutes
-    R2 score: 0.127
-    We notice that the model improved the MAE result, reducing the value from 3.19 to 2.57 minutes. This proves that the features chosen, such as "Month" and "Service" have a real impact on delays.
-    The R2 score, or the coefficient of determination, measures how well a model fits data, and how well it can predict future outcomes. It ranges from 0 to 1.
-    In our case, the R2 score of 0.127 means that the features currently in our dataset account for 12.7% of the variance in arrival delays. It confirms that we take into account important features, however, a large portion of delays is driven by external factors.
-    3) Random Forest Regressor: After the Linear Regression, we implemented a Random Forest Regressor. Instead of searching for a single linear equation, this module is an ensemble method which uses 100 independent trees to analyze the data. Each tree learns different patterns, and their result are averaged to produce the final prediction.
-    Random Forest MAE: 2.28 minutes
-    R2 score: 0.041
-    The Random Forest achieved our best error rate, reducing the MAE to 2.28 minutes. This means that for the vast majority of train journeys, this model is the most accurate at predicting the arrival time.
-    However, while the MAE improved, the R2 score dropped to 0.041. This highlights a characteristic of the Random Forest Regressor: it is great at identifying non-linear patterns, but is sensitive to outliers. Because the dataset contains big delays, as shown by the high baseline RMSE, the R2 score is lower.
-
-Model selection:
-    After identifying the Random Forest Regressor as the most accurate model based on the initial MAE, we perform hyperparameter tuning to optimize it.
-    Key hyperparameters:
-    - n_estimators = the number of trees (we chose 3 values);
-    - max_depth = limits how deep each tree can grow (3 values);
-    - min_samples_split = minimum number of samples required to split an internal node (3 values).
-    GridSearchCV will create a grid of 3 x 3 x 3 = 27 possible combinations.
-    We then use Cross-Validation on each combination. The training dataset is divided into 5 subsets and the model is trained 5 separate times. Each time, we will use 4 subsets for training and the remaining one for validation (different subset every time, until we go through all of them). We calculate the average MAE across all 5 iterations to determine the effectiveness of a specific parameter combination.
-    The algorithm identifies the best parameters, which provided the lowest error, and outputs the best estimator (the model trained with these settings).
-    
 Setup：
-
 Install the required dependencies with: python3 -m pip install -r requirements.txt
 
 Run the Streamlit dashboard:
-
 To start the dashboard, run: python3 -m streamlit run tardis_dashboard.py
+
+tardis_eda.ipynb - Data Cleaning and Exploration
+- loads dataset.csv and inspects its structure
+- removes duplicate rows
+- converts the "Date" column to datetime format
+- converts numeric columns stored as strings (using ',' as a decimal separator)
+- fills missing values for categorical columns and drops rows with missing key fields
+- creates new features: 
+    Temporal features (Year, Month, Month name, Quarter, Season)
+    Route (Route: departure station -> arrival station)
+    Rates (cancellation rate, Departure delay rate, Arrival delay rate)
+    Category (Delay severity: Low/Medium/High, based on arrival delay rate)
+- exports the cleaned data to cleaned_dataset.csv
+- includes visualization: delay distribution histogram, boxplot and top 10 stations by average delay
+
+tardis_model.ipynb - Predictive Modeling
+- loads cleaned_dataset.csv
+- selects features: Service, Departure station, Arrival station, Month, Year, Number of scheduled trains
+- applies One-Hot Encoding to categorical columns
+- splits data: 80% training/ 20% testing
+- sets a baseline model (mean prediction) to have a reference point for comparison
+- trains two models: Linear Regression and Random Forest Regressor
+- evaluates both using MAE and R2 score
+- applies GridSearchCV
+- compares standard vs. tuned Random Forest performance
+- displays the top 10 most important features
+- saves the model to model.pkl
+
+tardis_dashboard.py - Streamlit Dashboard
+The Dashboard has several sections:
+- sidebar filters: filter data by service type and month
+- summary statistics: average arrival delay, total trips, punctuality rate
+- delay distribution: histogram and boxplot of arrival delays
+- station-level analysis: bar chart of top 10 departure stations by average delay
+- correlation heatmap: relationship between delay-rated numeric variables
+- prediction interface: fill in journey details (service, stations, month, year, number of trains) and get a predicted delay in minutes
+- model explanation: top 10 feature importances from the Random Forest model
+
+model_report.md - Model Report
+Contains a detailed breakdown of the modeling process: evaluations for each model (MAE, RMSE, R2), justification for the feature selection and an explanation of the hyperparameter tuning process.
+The selected model is a tuned Random Forest Regressor, which achieved the lowest MAE across all tested models.
+
+Note: Code is formatted with ruff as required.
