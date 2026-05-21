@@ -9,11 +9,21 @@ st.set_page_config(page_title="TARDIS Dashboard", layout="wide")
 
 @st.cache_data
 def load_data():
+    """
+    Load the cleaned dataset from .csv file.
+    Returns:
+        The loaded dataset.
+    """
     return pd.read_csv("cleaned_dataset.csv")
 
 
 @st.cache_resource
 def load_model():
+    """
+    Load the pre-trained Random Forest model from .pkl file.
+    Returns:
+        The trained regression model.
+    """
     with open("model.pkl", "rb") as file:
         return pickle.load(file)
 
@@ -28,15 +38,15 @@ st.write("Train delay analysis and prediction dashboard")
 st.sidebar.header("Interactive Filters")
 st.sidebar.write("Use the filters to get specific data.")
 
-# available options
+# Available options
 service_options = sorted(df["Service"].dropna().unique())
 month_options = sorted(df["Month"].dropna().unique())
 
-# show filters
+# Show filters
 selected_services = st.sidebar.multiselect("Select service type", service_options, default=service_options)
 selected_months = st.sidebar.multiselect("Select month", month_options, default=month_options)
 
-# create a new filtered dataframe
+# Create a new filtered dataframe
 filtered_df = df[
     (df["Service"].isin(selected_services)) &
     (df["Month"].isin(selected_months))
