@@ -43,13 +43,16 @@ service_options = sorted(df["Service"].dropna().unique())
 month_options = sorted(df["Month"].dropna().unique())
 
 # Show filters
-selected_services = st.sidebar.multiselect("Select service type", service_options, default=service_options)
-selected_months = st.sidebar.multiselect("Select month", month_options, default=month_options)
+selected_services = st.sidebar.multiselect(
+    "Select service type", service_options, default=service_options
+)
+selected_months = st.sidebar.multiselect(
+    "Select month", month_options, default=month_options
+)
 
 # Create a new filtered dataframe
 filtered_df = df[
-    (df["Service"].isin(selected_services)) &
-    (df["Month"].isin(selected_months))
+    (df["Service"].isin(selected_services)) & (df["Month"].isin(selected_months))
 ]
 
 # Dynamic Summary Statistics
@@ -59,7 +62,9 @@ average_delay = filtered_df["Average delay of all trains at arrival"].mean()
 total_trips = len(filtered_df)
 
 if total_trips > 0:
-    punctuality_rate = (filtered_df["Average delay of all trains at arrival"] <= 5).mean() * 100
+    punctuality_rate = (
+        filtered_df["Average delay of all trains at arrival"] <= 5
+    ).mean() * 100
 else:
     punctuality_rate = 0
 
@@ -73,7 +78,12 @@ col3.metric("Punctuality Rate", f"{punctuality_rate:.1f}%")
 st.header("Delay Distribution")
 
 fig, ax = plt.subplots(figsize=(8, 5))
-ax.hist(df["Average delay of all trains at arrival"].dropna(), bins=20, color='skyblue', edgecolor='black')
+ax.hist(
+    df["Average delay of all trains at arrival"].dropna(),
+    bins=20,
+    color="skyblue",
+    edgecolor="black",
+)
 ax.set_title("Distribution of Average Arrival Delay")
 ax.set_xlabel("Average Arrival Delay (minutes)")
 ax.set_ylabel("Frequency")
@@ -101,7 +111,9 @@ top_stations = (
 )
 
 fig_stations, ax_stations = plt.subplots(figsize=(10, 6))
-top_stations.sort_values().plot(kind="barh", ax=ax_stations, color="lightcoral", edgecolor='black')
+top_stations.sort_values().plot(
+    kind="barh", ax=ax_stations, color="lightcoral", edgecolor="black"
+)
 ax_stations.set_title("Top 10 Departure Stations by Average Arrival Delay")
 ax_stations.set_xlabel("Average Arrival Delay (minutes)")
 ax_stations.set_ylabel("Departure Station")
@@ -111,8 +123,10 @@ st.pyplot(fig_stations)
 st.header("Correlation Heatmap")
 st.write("Visual representation of relationships between numeric delay factors.")
 
-numeric_cols = filtered_df.select_dtypes(include=['float64', 'int64']).columns
-key_numeric_cols = [col for col in numeric_cols if "Average delay" in col or "Number" in col]
+numeric_cols = filtered_df.select_dtypes(include=["float64", "int64"]).columns
+key_numeric_cols = [
+    col for col in numeric_cols if "Average delay" in col or "Number" in col
+]
 
 if len(key_numeric_cols) > 0:
     corr_matrix = filtered_df[key_numeric_cols].corr()
@@ -138,26 +152,25 @@ arrival_station = st.selectbox("Arrival station", arrival_options)
 month = int(st.selectbox("Month", month_options))
 year = int(st.selectbox("Year", year_options))
 scheduled_trains = st.number_input(
-    "Number of scheduled trains",
-    min_value=0,
-    value=10,
-    step=1
+    "Number of scheduled trains", min_value=0, value=10, step=1
 )
 
 if st.button("Predict Delay"):
-    input_df = pd.DataFrame({
-        "Service": [service],
-        "Departure station": [departure_station],
-        "Arrival station": [arrival_station],
-        "Month": [month],
-        "Year": [year],
-        "Number of scheduled trains": [int(scheduled_trains)]
-    })
+    input_df = pd.DataFrame(
+        {
+            "Service": [service],
+            "Departure station": [departure_station],
+            "Arrival station": [arrival_station],
+            "Month": [month],
+            "Year": [year],
+            "Number of scheduled trains": [int(scheduled_trains)],
+        }
+    )
 
     input_encoded = pd.get_dummies(
         input_df,
         columns=["Service", "Departure station", "Arrival station"],
-        drop_first=True
+        drop_first=True,
     )
 
     input_encoded = input_encoded.reindex(columns=model.feature_names_in_, fill_value=0)
@@ -170,17 +183,13 @@ if st.button("Predict Delay"):
 st.header("Model Explanation")
 
 feature_importance = pd.Series(
-    model.feature_importances_,
-    index=model.feature_names_in_
+    model.feature_importances_, index=model.feature_names_in_
 ).sort_values(ascending=False)
 
 st.subheader("Top 10 Feature Importances")
 
 fig3, ax3 = plt.subplots(figsize=(10, 6))
-feature_importance.head(10).sort_values().plot(
-    kind="barh",
-    ax=ax3
-)
+feature_importance.head(10).sort_values().plot(kind="barh", ax=ax3)
 ax3.set_title("Top 10 Feature Importances in Random Forest")
 ax3.set_xlabel("Importance Score")
 ax3.set_ylabel("Feature")
