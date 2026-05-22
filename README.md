@@ -1,9 +1,11 @@
-EPITECH PROJECT, 2026 - TARDIS
-Train Delay Analysis and Prediction
+# EPITECH PROJECT, 2026 - TARDIS
+
+## Train Delay Analysis and Prediction
 
 The goal of this project is to analyze train delay data, build a regression model to predict delays, and display everything through an interactive dashboard.
 
-Project Structure:
+## Project Structure
+
 - dataset.csv: initial dataset
 - cleaned_dataset.csv: output from the tardis_eda notebook
 - model.pkl: trained Random Forest model
@@ -12,15 +14,20 @@ Project Structure:
 - tardis_dashboard.py: Streamlit dashboard
 - requirements.txt: project dependencies
 - model_report.md: detailed model results
-- README.md
+- README.md: project documentation, setup, and usage instructions
 
-Setup：
-Install the required dependencies with: python3 -m pip install -r requirements.txt
+## Setup
 
-Run the Streamlit dashboard:
-To start the dashboard, run: python3 -m streamlit run tardis_dashboard.py
+Install the required dependencies with: 
+python3 -m pip install -r requirements.txt
 
-tardis_eda.ipynb - Data Cleaning and Exploration
+### Run the Streamlit dashboard:
+
+To start the dashboard, run: 
+python3 -m streamlit run tardis_dashboard.py
+
+## tardis_eda.ipynb - Data Cleaning and Exploration
+
 - loads dataset.csv and inspects its structure
 - removes duplicate rows
 - converts the "Date" column to datetime format
@@ -34,7 +41,8 @@ tardis_eda.ipynb - Data Cleaning and Exploration
 - exports the cleaned data to cleaned_dataset.csv
 - includes visualization: delay distribution histogram, boxplot and top 10 stations by average delay
 
-tardis_model.ipynb - Predictive Modeling
+## tardis_model.ipynb - Predictive Modeling
+
 - loads cleaned_dataset.csv
 - selects features: Service, Departure station, Arrival station, Month, Year, Number of scheduled trains
 - applies One-Hot Encoding to categorical columns
@@ -47,7 +55,8 @@ tardis_model.ipynb - Predictive Modeling
 - displays the top 10 most important features
 - saves the model to model.pkl
 
-tardis_dashboard.py - Streamlit Dashboard
+## tardis_dashboard.py - Streamlit Dashboard
+
 The Dashboard has several sections:
 - sidebar filters: filter data by service type and month
 - summary statistics: average arrival delay, total trips, punctuality rate
@@ -57,8 +66,9 @@ The Dashboard has several sections:
 - prediction interface: fill in journey details (service, stations, month, year, number of trains) and get a predicted delay in minutes
 - model explanation: top 10 feature importances from the Random Forest model
 
-model_report.md - Model Report
+## model_report.md - Model Report
+
 Contains a detailed breakdown of the modeling process: evaluations for each model (MAE, RMSE, R2), justification for the feature selection and an explanation of the hyperparameter tuning process.
 The selected model is a tuned Random Forest Regressor, which achieved the lowest MAE across all tested models.
 
-Note: Code is formatted with ruff as required.
+## Note: Code is formatted with ruff as required.
